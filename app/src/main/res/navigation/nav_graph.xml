@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/marvelCharactersFragment">
+
+    <fragment
+        android:id="@+id/marvelCharactersFragment"
+        android:name="com.android.marvel.MarvelCharactersFragment"
+        android:label="MarvelCharactersFragment"
+        tools:layout="@layout/fragment_marvel_characters">
+        <action
+            android:id="@+id/action_marvelCharactersFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_marvelCharactersFragment_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.android.marvel.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/characterDetailsFragment"
+        android:name="com.android.marvel.CharacterDetailsFragment"
+        android:label="fragment_character_details"
+        tools:layout="@layout/fragment_character_details" >
+        <argument
+            android:name="character"
+            app:argType="com.android.marvel.Character" />
+        <action
+            android:id="@+id/action_characterDetailsFragment_to_viewerFragment"
+            app:destination="@id/viewerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewerFragment"
+        android:name="com.android.marvel.ViewerFragment"
+        android:label="ViewerFragment" />
+</navigation>

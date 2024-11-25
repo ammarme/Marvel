@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimaryRed">#ED1D24</color>
+    <color name="colorPrimaryBlack">#FF000000</color>
+    <color name="backgroundAttachedImages">#282C30</color>
+    <color name="listItemSearch">#3C3F43</color>
+    <color name="textBlackTransparentColor">#3B131819</color>
+    <color name="textColorTransparent">#4D131819</color>
+    <color name="colorBlackTransparent">#8D131819</color>
+    <color name="colorWhiteTransparent">#F1F1F1</color>
+    <color name="colorRed">#EB5757</color>
+    <color name="colorDividerLight">#66D0D8DA</color>
 </resources>
