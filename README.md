@@ -1,6 +1,7 @@
 <h1 align="center">🦸‍♂️ Marvel 🦸‍♂️</h1>
 
 - List of hero characters with pagination.
+- Watch the video on [YouTube](https://youtu.be/EF6fqnnl3Uk).
 ![List](https://github.com/user-attachments/assets/85b29676-974d-48dc-9d6e-161cf0231c9d)
 
 - Details screen provides a comprehensive view of characters, with an adjustable section order, lazy-loaded images, and navigation implemented through the Navigation component. It features animations during navigation and images associated with the attached sections.
