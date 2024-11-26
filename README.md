@@ -1,12 +1,13 @@
 <h1 align="center">🦸‍♂️ Marvel 🦸‍♂️</h1>
 
-- List of hero characters with pagination. [Video](https://github.com/user-attachments/assets/85b29676-974d-48dc-9d6e-161cf0231c9d)).
+- List of hero characters with pagination. [Video](https://github.com/user-attachments/assets/85b29676-974d-48dc-9d6e-161cf0231c9d).
 
 - Details screen provides a comprehensive view of characters, with an adjustable section order, lazy-loaded images, and navigation implemented through the Navigation component. It features animations during navigation and images associated with the attached sections. [Video](https://github.com/user-attachments/assets/ab614213-954f-4f36-a3f4-112fdf8aa4c3)
+- You can search for characters by their names by tapping the magnifier icon. [Video](https://github.com/user-attachments/assets/28d9c64b-38fe-49dd-9c47-9e22245f7f95)
+- The app is designed to work properly even when there is no internet connection. [Video](https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7)
 
-- You can search for characters by their names by tapping the magnifier icon. [Video]([https://github.com/user-attachments/assets/28d9c64b-38fe-49dd-9c47-9e22245f7f95).
 
--The app is designed to work properly even when there is no internet connection. [Video]([https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7).
+
 
 
 Model-View-ViewModel (i.e. MVVM) is a client application architecture template proposed by John Gossman as an alternative to MVC and MVP patterns when using Data Binding technology. Its concept separates data presentation logic from business logic by moving it into a particular class for a clear distinction.
