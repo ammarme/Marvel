@@ -15,33 +15,45 @@
             app:destination="@id/searchFragment" />
         <action
             android:id="@+id/action_marvelCharactersFragment_to_characterDetailsFragment"
-            app:destination="@id/characterDetailsFragment" />
+            app:destination="@id/characterDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.android.marvel.app.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_characterDetailsFragment"
-            app:destination="@id/characterDetailsFragment" />
+            app:destination="@id/characterDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/characterDetailsFragment"
         android:name="com.android.marvel.app.ui.details.DetailsFragment"
         android:label="fragment_character_details"
-        tools:layout="@layout/fragment_details" >
+        tools:layout="@layout/fragment_details">
         <argument
             android:name="character"
             app:argType="com.android.marvel.app.model.Character" />
         <action
             android:id="@+id/action_characterDetailsFragment_to_viewerFragment"
-            app:destination="@id/viewerFragment" />
+            app:destination="@id/viewerFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/viewerFragment"
         android:name="com.android.marvel.app.ui.imageViewer.ImageViewerFragment"
-        android:label="ImageViewerFragment" >
+        android:label="ImageViewerFragment">
         <argument
             android:name="position"
             app:argType="integer" />

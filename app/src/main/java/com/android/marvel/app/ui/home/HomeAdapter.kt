@@ -7,15 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.android.marvel.R
-import com.android.marvel.databinding.ItemMarvelCharacterBinding
 import com.android.marvel.app.model.Character
 import com.android.marvel.app.model.getFullImageUrl
+import com.android.marvel.databinding.ItemMarvelCharacterBinding
 
 class HomeAdapter(
     private val characterList: MutableList<Character>
 ) : RecyclerView.Adapter<HomeAdapter.CharacterViewHolder>() {
 
-    // ViewHolder for each item
     class CharacterViewHolder(private val binding: ItemMarvelCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

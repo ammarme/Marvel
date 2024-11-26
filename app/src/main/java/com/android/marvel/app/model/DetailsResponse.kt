@@ -3,7 +3,6 @@ package com.android.marvel.app.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-// Comics Response with simplified structure
 data class DetailsResponse(
     val data: DetailsData
 )

@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class) // This ensures that the repository is a singleton
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
@@ -22,6 +22,6 @@ object AppModule {
 
     @Provides
     fun provideApiService(): ApiService {
-        return ApiConfig.provideApiService() // Your API service provider
+        return ApiConfig.provideApiService()
     }
 }

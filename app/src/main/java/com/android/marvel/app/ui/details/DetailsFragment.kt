@@ -113,19 +113,15 @@ class DetailsFragment : Fragment() {
     }
 
     private fun displayCharacterData(character: Character) {
-        // Load image
         val imageUrl = character.thumbnail?.getFullImageUrl()
         binding.collapsingImage.load(imageUrl)
         binding.blurBackground.load(imageUrl)
 
-        // Set character name and description
         binding.characterName.text = character.name
         binding.characterDescription.text = character.description
 
-        // Handle URL sections
         setupUrlSection(character)
 
-        // Visibility management for name and description
         updateTextVisibility(
             binding.characterName to binding.nameHeader,
             shouldHide = character.name.isBlank()

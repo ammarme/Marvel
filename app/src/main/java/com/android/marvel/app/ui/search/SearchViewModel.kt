@@ -6,15 +6,16 @@ import com.android.marvel.app.model.Character
 import com.android.marvel.app.repo.MarvelRepository
 import com.android.marvel.app.utils.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor (
+class SearchViewModel @Inject constructor(
     private val marvelRepository: MarvelRepository
 ) : BaseViewModel() {
 
-    // Expose LiveData for the list of characters and error states
     private val charactersLiveData: MutableLiveData<List<Character>> = MutableLiveData()
     val characters: LiveData<List<Character>> get() = charactersLiveData
 
@@ -24,21 +25,25 @@ class SearchViewModel @Inject constructor (
     private val errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
     val errorMessage: LiveData<String> get() = errorMessageLiveData
 
+    private var searchJob: Job? = null
+
     fun searchByName(nameStartsWith: String?) {
+        searchJob?.cancel()
+
         if (nameStartsWith.isNullOrBlank()) {
             charactersLiveData.value = emptyList()
             return
         }
 
-        scope.launch {
+        searchJob = scope.launch {
             try {
                 val response = marvelRepository.searchByName(nameStartsWith)
 
-                // Update the LiveData with the result
                 charactersLiveData.value = response.data.results
                 errorConnectionLiveData.value = false
+            } catch (_: CancellationException) {
+
             } catch (e: Exception) {
-                // Catch any error and handle it
                 errorMessageLiveData.value = getError(e).getErrorMessage()
                 errorConnectionLiveData.value = true
             }

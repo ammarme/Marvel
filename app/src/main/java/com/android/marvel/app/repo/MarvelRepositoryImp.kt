@@ -32,4 +32,3 @@ class MarvelRepositoryImp(
         return apiService.searchByName(nameStartsWith)
     }
 }
-

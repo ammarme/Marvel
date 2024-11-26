@@ -31,20 +31,18 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout using ViewBinding
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Initialize UI components
+
         setupToolbar()
         addSearchMenu()
         setupCharacterRecyclerView()
         observeViewModel()
 
-        // Retry on error
         binding.textViewTryAgain.setOnClickListener {
             viewModel.getCharacters()
         }
@@ -84,7 +82,6 @@ class HomeFragment : Fragment() {
             this.layoutManager = layoutManager
         }
 
-        // Implement endless scrolling
         binding.recyclerView.addOnScrollListener(
             object : EndlessRecyclerViewScrollListener(layoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {

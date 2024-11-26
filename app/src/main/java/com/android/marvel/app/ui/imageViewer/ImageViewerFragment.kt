@@ -1,6 +1,5 @@
 package com.android.marvel.app.ui.imageViewer
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +38,7 @@ class ImageViewerFragment : Fragment() {
         with(binding.comicViewPager) {
             adapter = comicPagerAdapter
 
-            post { setCurrentItem(args.position, true) }
+            post { setCurrentItem(args.position, false) }
 
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {

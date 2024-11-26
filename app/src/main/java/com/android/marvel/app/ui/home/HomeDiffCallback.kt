@@ -13,12 +13,10 @@ class HomeDiffCallback(
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        // Check if items represent the same character
         return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        // Check if content has changed
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }

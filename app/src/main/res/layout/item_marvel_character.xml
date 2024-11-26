@@ -5,7 +5,6 @@
     android:layout_height="200dp"
     android:background="@color/white">
 
-    <!-- Background Image -->
     <ImageView
         android:id="@+id/itemImageView"
         android:layout_width="0dp"

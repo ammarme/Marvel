@@ -11,17 +11,17 @@ import com.android.marvel.databinding.ItemDetailsBinding
 import com.android.marvel.app.model.DetailItem
 import com.android.marvel.app.model.getFullImageUrl
 
-class DetailsAdapter(
-    private var items: MutableList<DetailItem>
-) : RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
+class DetailsAdapter(private var items: MutableList<DetailItem>) :
+    RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
 
-    // ViewHolder Class
-    class ItemViewHolder(private val binding: ItemDetailsBinding ,private val items: List<DetailItem>) : RecyclerView.ViewHolder(binding.root) {
+    class ItemViewHolder(
+        private val binding: ItemDetailsBinding,
+        private val items: List<DetailItem>
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(detailItem: DetailItem) {
             binding.textViewName.text = detailItem.title
             binding.imageViewHero.load(detailItem.thumbnail?.getFullImageUrl())
 
-            // Handle click events
             binding.root.setOnClickListener {
                 val action = DetailsFragmentDirections
                     .actionCharacterDetailsFragmentToViewerFragment(
@@ -39,7 +39,7 @@ class DetailsAdapter(
             parent,
             false
         )
-        return ItemViewHolder(binding , items)
+        return ItemViewHolder(binding, items)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
