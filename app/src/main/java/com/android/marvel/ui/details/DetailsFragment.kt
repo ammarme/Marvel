@@ -76,7 +76,7 @@ class CharacterDetailsFragment : Fragment() {
 
         recyclerViews.forEach { (recyclerView, _) ->
             recyclerView.apply {
-                adapter = DetailsAdapter(mutableListOf()) {}
+                adapter = DetailsAdapter(mutableListOf())
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(
                     requireContext(),

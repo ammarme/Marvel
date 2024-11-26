@@ -1,51 +1,76 @@
 package com.android.marvel.ui.imageViewer
 
+
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
+import com.android.marvel.R
 import com.android.marvel.databinding.FragmentViewerBinding
 
+class ImageViewerFragment : Fragment() {
+    // Use by lazy for view binding to ensure it's only inflated when needed
+    private val binding by lazy { FragmentViewerBinding.inflate(layoutInflater) }
 
-class ViewerFragment : Fragment() {
-    private lateinit var binding: FragmentViewerBinding
+    // Use by navArgs() for safe navigation arguments
+    private val args: ImageViewerFragmentArgs by navArgs()
+
+    // Use view lifecycle to manage view-related logic
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentViewerBinding.inflate(inflater , container , false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewPager()
+        setupCloseButton()
+    }
 
-        // Initialize the adapter with comic pages
-//        binding.comicViewPager.adapter = ComicPagerAdapter(dummyCharacters)
+    private fun setupViewPager() {
+        // Create adapter with items from arguments
+        val comicPagerAdapter = ComicPagerAdapter(args.items.toList())
 
-        // Set up the close button
+        with(binding.comicViewPager) {
+            adapter = comicPagerAdapter
+
+            // Set initial position after layout is complete
+            post { setCurrentItem(args.position, false) }
+
+            // Set up page change listener
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    updatePageInfo(position)
+                    updatePageTitle(position)
+                }
+            })
+        }
+    }
+
+    private fun setupCloseButton() {
         binding.closeButton.setOnClickListener {
             findNavController().navigateUp()
         }
-
-        // Update page number when page changes
-        binding.comicViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                updatePageInfo(position)
-//                binding.comicTitleText.text = dummyCharacters[position].name
-            }
-        })
-
-        // Set initial comic information
-        binding.comicTitleText.text = "Ant-Man & The Wasp (2010) #3"
-        updatePageInfo(0)
     }
 
     private fun updatePageInfo(position: Int) {
-        binding.pageNumberText.text = "${position + 1} / ${binding.comicViewPager.adapter?.itemCount}"
+        // Safe call to adapter and use of position
+        binding.pageNumberText.text = getString(
+            R.string.page_number_format,
+            position + 1,
+            binding.comicViewPager.adapter?.itemCount ?: 0
+        )
     }
 
+    private fun updatePageTitle(position: Int) {
+        // Safely access title with bounds checking
+        binding.comicTitleText.text = args.items.getOrNull(position)?.name ?: ""
+    }
 }

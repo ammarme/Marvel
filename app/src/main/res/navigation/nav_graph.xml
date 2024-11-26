@@ -40,6 +40,13 @@
     </fragment>
     <fragment
         android:id="@+id/viewerFragment"
-        android:name="com.android.marvel.ui.imageViewer.ViewerFragment"
-        android:label="ViewerFragment" />
+        android:name="com.android.marvel.ui.imageViewer.ImageViewerFragment"
+        android:label="ImageViewerFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="items"
+            app:argType="com.android.marvel.ui.model.DetailItem[]" />
+    </fragment>
 </navigation>

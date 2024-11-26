@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.android.marvel.ui.model.Character
 import com.android.marvel.R
 import com.android.marvel.databinding.ItemComicPageBinding
+import com.android.marvel.ui.model.DetailItem
 
-class ComicPagerAdapter(private val characters: List<Character>) :
+class ComicPagerAdapter(private val items: List<DetailItem>) :
     RecyclerView.Adapter<ComicPagerAdapter.ComicPageViewHolder>() {
 
     class ComicPageViewHolder(private val binding: ItemComicPageBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(character : Character){
-//            binding.comicPageImage.load(character.imageUrl)
+        fun onBind(item : DetailItem){
+            binding.comicPageImage.load(item.imageUrl)
         }
     }
 
@@ -24,8 +24,8 @@ class ComicPagerAdapter(private val characters: List<Character>) :
     }
 
     override fun onBindViewHolder(holder: ComicPageViewHolder, position: Int) {
-        holder.onBind(characters[position])
+        holder.onBind(items[position])
     }
 
-    override fun getItemCount() = characters.size
+    override fun getItemCount() = items.size
 }

@@ -3,26 +3,27 @@ package com.android.marvel.ui.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.android.marvel.databinding.ItemDetailsBinding
 import com.android.marvel.ui.model.DetailItem
 
 class DetailsAdapter(
-    private val items: MutableList<DetailItem>,
-    private val onItemClick: (DetailItem) -> Unit
+    private val items: MutableList<DetailItem>
 ) : RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
 
     // ViewHolder Class
     class ItemViewHolder(private val binding: ItemDetailsBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(detailItem: DetailItem, onItemClick: (DetailItem) -> Unit) {
-            binding.textViewName.text = detailItem.name
+        fun bind(position: Int, items: MutableList<DetailItem>) {
+            binding.textViewName.text = items[position].name
 
-            binding.imageViewHero.load(detailItem.imageUrl)
+            binding.imageViewHero.load(items[position].imageUrl)
 
             // Handle click events
             binding.root.setOnClickListener {
-                onItemClick(detailItem)
+                val action = CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToViewerFragment(position, items.toTypedArray())
+                Navigation.findNavController(binding.root).navigate(action)
             }
         }
     }
@@ -37,7 +38,7 @@ class DetailsAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(items[position], onItemClick)
+        holder.bind(position , items)
     }
 
     override fun getItemCount(): Int = items.size
