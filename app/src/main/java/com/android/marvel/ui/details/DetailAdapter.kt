@@ -1,4 +1,4 @@
-package com.android.marvel
+package com.android.marvel.ui.details
 
 
 import android.view.LayoutInflater
@@ -6,25 +6,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.android.marvel.databinding.ItemDetailsBinding
+import com.android.marvel.ui.model.DetailItem
 
-class ItemDetailsAdapter(
-    private val items: List<Character>,
-    private val onItemClick: (Character) -> Unit
-) : RecyclerView.Adapter<ItemDetailsAdapter.ItemViewHolder>() {
+class DetailsAdapter(
+    private val items: MutableList<DetailItem>,
+    private val onItemClick: (DetailItem) -> Unit
+) : RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
 
     // ViewHolder Class
     class ItemViewHolder(private val binding: ItemDetailsBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(character: Character, onItemClick: (Character) -> Unit) {
-            binding.textViewName.text = character.name
+        fun bind(detailItem: DetailItem, onItemClick: (DetailItem) -> Unit) {
+            binding.textViewName.text = detailItem.name
 
-            binding.imageViewHero.load(character.imageUrl) {
-                placeholder(R.drawable.ic_launcher_foreground)
-                error(R.drawable.ic_launcher_background)
-            }
+            binding.imageViewHero.load(detailItem.imageUrl)
 
             // Handle click events
             binding.root.setOnClickListener {
-                onItemClick(character)
+                onItemClick(detailItem)
             }
         }
     }
@@ -43,4 +41,10 @@ class ItemDetailsAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun insertData(detailItemList: List<DetailItem>) {
+        this.items.clear()
+        this.items.addAll(detailItemList)
+        notifyDataSetChanged()
+    }
 }

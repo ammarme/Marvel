@@ -1,9 +1,11 @@
-package com.android.marvel
+package com.android.marvel.ui.imageViewer
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.android.marvel.ui.model.Character
+import com.android.marvel.R
 import com.android.marvel.databinding.ItemComicPageBinding
 
 class ComicPagerAdapter(private val characters: List<Character>) :
@@ -11,7 +13,7 @@ class ComicPagerAdapter(private val characters: List<Character>) :
 
     class ComicPageViewHolder(private val binding: ItemComicPageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(character : Character){
-            binding.comicPageImage.load(character.imageUrl)
+//            binding.comicPageImage.load(character.imageUrl)
         }
     }
 

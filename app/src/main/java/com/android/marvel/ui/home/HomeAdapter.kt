@@ -1,4 +1,4 @@
-package com.android.marvel
+package com.android.marvel.ui.home
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.android.marvel.R
 import com.android.marvel.databinding.ItemMarvelCharacterBinding
+import com.android.marvel.ui.model.Character
 
-class CharacterAdapter(private val characterList: List<Character>) :
-    RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
+class HomeAdapter(private val characterList: MutableList<Character>) :
+    RecyclerView.Adapter<HomeAdapter.CharacterViewHolder>() {
 
     // ViewHolder for each item
     class CharacterViewHolder(private val binding: ItemMarvelCharacterBinding) :
@@ -17,13 +19,18 @@ class CharacterAdapter(private val characterList: List<Character>) :
 
         fun bind(character: Character) {
             binding.itemTextView.text = character.name
-            binding.itemImageView.load(character.imageUrl) {
-                placeholder(R.drawable.ic_launcher_foreground)
-                error(R.drawable.ic_launcher_background)
+            val imageUrl = "${character.thumbnail?.path}.${character.thumbnail?.extension}"
+
+            binding.itemImageView.load(imageUrl) {
+                placeholder(R.color.colorDividerLight)
+                error(R.color.colorPrimaryRed)
             }
 
             binding.root.setOnClickListener {
-                val action = MarvelCharactersFragmentDirections.actionMarvelCharactersFragmentToCharacterDetailsFragment(character)
+                val action =
+                    HomeFragmentDirections.actionMarvelCharactersFragmentToCharacterDetailsFragment(
+                        character
+                    )
                 Navigation.findNavController(binding.root).navigate(action)
             }
         }
@@ -43,4 +50,10 @@ class CharacterAdapter(private val characterList: List<Character>) :
     }
 
     override fun getItemCount(): Int = characterList.size
+
+    fun addCharacters(listCharacters: List<Character>) {
+        characterList.clear()
+        characterList.addAll(listCharacters)
+        notifyDataSetChanged()
+    }
 }

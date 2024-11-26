@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/marvelCharactersFragment"
-        android:name="com.android.marvel.MarvelCharactersFragment"
+        android:name="com.android.marvel.ui.home.HomeFragment"
         android:label="MarvelCharactersFragment"
         tools:layout="@layout/fragment_marvel_characters">
         <action
@@ -19,23 +19,27 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.android.marvel.SearchFragment"
+        android:name="com.android.marvel.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/characterDetailsFragment"
-        android:name="com.android.marvel.CharacterDetailsFragment"
+        android:name="com.android.marvel.ui.details.CharacterDetailsFragment"
         android:label="fragment_character_details"
         tools:layout="@layout/fragment_character_details" >
         <argument
             android:name="character"
-            app:argType="com.android.marvel.Character" />
+            app:argType="com.android.marvel.ui.model.Character" />
         <action
             android:id="@+id/action_characterDetailsFragment_to_viewerFragment"
             app:destination="@id/viewerFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewerFragment"
-        android:name="com.android.marvel.ViewerFragment"
+        android:name="com.android.marvel.ui.imageViewer.ViewerFragment"
         android:label="ViewerFragment" />
 </navigation>

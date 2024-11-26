@@ -1,4 +1,4 @@
-package com.android.marvel
+package com.android.marvel.ui.imageViewer
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -24,7 +24,7 @@ class ViewerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize the adapter with comic pages
-        binding.comicViewPager.adapter = ComicPagerAdapter(dummyCharacters)
+//        binding.comicViewPager.adapter = ComicPagerAdapter(dummyCharacters)
 
         // Set up the close button
         binding.closeButton.setOnClickListener {
@@ -35,7 +35,7 @@ class ViewerFragment : Fragment() {
         binding.comicViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 updatePageInfo(position)
-                binding.comicTitleText.text = dummyCharacters[position].name
+//                binding.comicTitleText.text = dummyCharacters[position].name
             }
         })
 
