@@ -18,9 +18,9 @@ class HomeViewModel @Inject constructor(
     private var offset: Int = 1
 
     private val charactersLiveData = MutableLiveData<List<Character>>()
-    val characters: LiveData<List<Character>> = charactersLiveData
+    val characters: LiveData<List<Character>> = charactersLiveData // Expose immutable LiveData
 
-    val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isLoading: LiveData<Boolean> get() = isLoadingLiveData
 
     private val errorConnectionLiveData: MutableLiveData<Boolean> = MutableLiveData()

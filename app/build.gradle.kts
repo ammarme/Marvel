@@ -76,8 +76,23 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-}
 
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+
+    androidTestImplementation(libs.mockito.android)
+
+    testImplementation(libs.androidx.core.testing)
+
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    testImplementation(libs.hilt.android.testing)
+
+    androidTestImplementation (libs.androidx.hilt.lifecycle.viewmodel)
+    androidTestImplementation (libs.androidx.hilt.work)
+
+    testImplementation (libs.androidx.lifecycle.livedata.ktx)
+}
 kapt {
     correctErrorTypes = true
 }

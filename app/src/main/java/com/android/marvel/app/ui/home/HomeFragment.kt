@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -22,10 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private lateinit var binding :FragmentHomeBinding
-
+    private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var homeAdapter: HomeAdapter
+    private var scrollListener: EndlessRecyclerViewScrollListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,15 +38,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupToolbar()
         addSearchMenu()
         setupCharacterRecyclerView()
         observeViewModel()
-
-        binding.textViewTryAgain.setOnClickListener {
-            viewModel.getCharacters()
-        }
     }
 
     private fun addSearchMenu() {
@@ -72,23 +68,26 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupCharacterRecyclerView() {
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(requireContext())
 
         homeAdapter = HomeAdapter(mutableListOf())
-
         binding.recyclerView.apply {
             adapter = homeAdapter
-            setHasFixedSize(true)
             this.layoutManager = layoutManager
         }
 
-        binding.recyclerView.addOnScrollListener(
-            object : EndlessRecyclerViewScrollListener(layoutManager) {
-                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                    viewModel.getCharacters()
-                }
+        scrollListener =  object : EndlessRecyclerViewScrollListener(layoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                viewModel.getCharacters()
             }
-        )
+        }
+
+        binding.recyclerView.addOnScrollListener(scrollListener!!)
+
+        binding.textViewTryAgain.setOnClickListener {
+            scrollListener?.resetFailure()
+            viewModel.getCharacters()
+        }
     }
 
     private fun observeViewModel() {
@@ -101,12 +100,25 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.errorConnection.observe(viewLifecycleOwner) { hasError ->
-            binding.recyclerView.isVisible = !hasError
-            binding.layoutInternetError.isVisible = hasError
+            updateErrorState(hasError)
+            scrollListener?.resetFailure()
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
-            binding.textViewErrorMessage.text = errorMessage
+            if (!errorMessage.isNullOrBlank() && homeAdapter.itemCount > 0) {
+                showToast(errorMessage)
+            } else {
+                binding.textViewErrorMessage.text = errorMessage
+            }
         }
+    }
+
+    private fun updateErrorState(hasError: Boolean) {
+        binding.recyclerView.isVisible = !hasError || homeAdapter.itemCount > 0
+        binding.layoutInternetError.isVisible = hasError && homeAdapter.itemCount == 0
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

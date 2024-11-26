@@ -39,6 +39,10 @@ class SearchFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.textViewTryAgain.setOnClickListener {
+            viewModel.searchByName(binding.searchView.query.toString())
+        }
+
         val adapter = SearchAdapter(mutableListOf())
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)

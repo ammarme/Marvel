@@ -43,6 +43,10 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
         }
     }
 
+    fun resetFailure() {
+        loading = false
+    }
+
     abstract fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView)
 
 }

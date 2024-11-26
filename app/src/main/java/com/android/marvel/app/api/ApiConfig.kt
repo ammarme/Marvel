@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit
 
 object ApiConfig {
 
-    // Create OkHttpClient
     private fun createOkHttpClient(): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BASIC
@@ -21,12 +20,11 @@ object ApiConfig {
         return OkHttpClient.Builder()
             .connectTimeout(60L, TimeUnit.SECONDS)
             .readTimeout(60L, TimeUnit.SECONDS)
-            .addInterceptor(ApiConfig::addDefaultParameters)
+            .addInterceptor(::addDefaultParameters)
             .addInterceptor(httpLoggingInterceptor)
             .build()
     }
 
-    // Add default parameters to each request
     private fun addDefaultParameters(chain: Interceptor.Chain): Response {
         val timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
         val originalRequest = chain.request()
@@ -43,7 +41,6 @@ object ApiConfig {
         return chain.proceed(newRequest)
     }
 
-    // Create Retrofit instance
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -52,7 +49,6 @@ object ApiConfig {
             .build()
     }
 
-    // Provide ApiService
     fun provideApiService(): ApiService {
         return createRetrofit().create(ApiService::class.java)
     }

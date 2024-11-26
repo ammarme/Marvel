@@ -33,7 +33,7 @@ class SearchAdapter(private var itemList: MutableList<Character>) : RecyclerView
             val imageUrl = character.thumbnail?.getFullImageUrl()
 
             binding.imageView.load(imageUrl) {
-                placeholder(R.color.colorDividerLight)
+                placeholder(R.color.black)
                 error(R.color.colorPrimaryRed)
             }
 

@@ -15,7 +15,7 @@ class HomeAdapter(
     private val characterList: MutableList<Character>
 ) : RecyclerView.Adapter<HomeAdapter.CharacterViewHolder>() {
 
-    class CharacterViewHolder(private val binding: ItemMarvelCharacterBinding) :
+    inner class CharacterViewHolder(private val binding: ItemMarvelCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(character: Character) {
@@ -23,7 +23,7 @@ class HomeAdapter(
             val imageUrl = character.thumbnail?.getFullImageUrl()
 
             binding.itemImageView.load(imageUrl) {
-                placeholder(R.color.colorDividerLight)
+                placeholder(R.color.black)
                 error(R.color.colorPrimaryRed)
             }
 

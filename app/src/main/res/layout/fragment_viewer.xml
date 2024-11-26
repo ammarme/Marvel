@@ -34,7 +34,7 @@
         android:id="@+id/bottomInfoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#282C30"
+        android:background="@color/backgroundAttachedImages"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"

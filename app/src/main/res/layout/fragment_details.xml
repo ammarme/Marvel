@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.7"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
     <View
         android:layout_width="match_parent"
@@ -72,7 +72,6 @@
                 android:textColor="@android:color/holo_red_dark"
                 android:textStyle="bold" />
 
-            <!-- Name Text -->
             <TextView
                 android:id="@+id/characterName"
                 android:layout_width="match_parent"
@@ -92,7 +91,6 @@
                 android:textColor="@android:color/holo_red_dark"
                 android:textStyle="bold" />
 
-            <!-- Description Text -->
             <TextView
                 android:id="@+id/characterDescription"
                 android:layout_width="match_parent"
@@ -102,7 +100,6 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <!-- Comics Section Title -->
             <TextView
                 android:id="@+id/comicsHeader"
                 android:layout_width="match_parent"
@@ -115,22 +112,20 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Horizontal scrollable comics RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comicsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_details"
                 tools:visibility="visible" />
 
-            <!-- Comics Section Title -->
             <TextView
                 android:id="@+id/seriesHeader"
                 android:layout_width="match_parent"
@@ -143,22 +138,20 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Horizontal scrollable comics RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/seriesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_details"
                 tools:visibility="visible" />
 
-            <!-- Comics Section Title -->
             <TextView
                 android:id="@+id/storiesHeader"
                 android:layout_width="match_parent"
@@ -171,22 +164,20 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Horizontal scrollable comics RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/storiesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_details"
                 tools:visibility="visible" />
 
-            <!-- Comics Section Title -->
             <TextView
                 android:id="@+id/eventHeader"
                 android:layout_width="match_parent"
@@ -199,17 +190,16 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Horizontal scrollable comics RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/eventRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_details"
                 tools:visibility="visible" />
@@ -221,12 +211,11 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/related_links"
-                android:textColor="#FF0000"
+                android:textColor="@color/colorPrimaryRed"
                 android:textStyle="bold"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Detail Item -->
             <LinearLayout
                 android:id="@+id/detail_item"
                 android:layout_width="match_parent"
@@ -257,7 +246,6 @@
                     app:tint="@color/white" />
             </LinearLayout>
 
-            <!-- Wiki Item -->
             <LinearLayout
                 android:id="@+id/wiki_item"
                 android:layout_width="match_parent"
@@ -288,7 +276,6 @@
                     app:tint="@color/white" />
             </LinearLayout>
 
-            <!-- Comiclink Item -->
             <LinearLayout
                 android:id="@+id/comiclink_item"
                 android:layout_width="match_parent"

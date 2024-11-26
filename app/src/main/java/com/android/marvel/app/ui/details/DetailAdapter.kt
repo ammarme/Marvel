@@ -11,10 +11,11 @@ import com.android.marvel.databinding.ItemDetailsBinding
 import com.android.marvel.app.model.DetailItem
 import com.android.marvel.app.model.getFullImageUrl
 
-class DetailsAdapter(private var items: MutableList<DetailItem>) :
-    RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
+class DetailsAdapter(
+    private var items: MutableList<DetailItem>
+) : RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
 
-    class ItemViewHolder(
+    inner class ItemViewHolder(
         private val binding: ItemDetailsBinding,
         private val items: List<DetailItem>
     ) : RecyclerView.ViewHolder(binding.root) {
