@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/marvelCharactersFragment"
-        android:name="com.android.marvel.ui.home.HomeFragment"
+        android:name="com.android.marvel.app.ui.home.HomeFragment"
         android:label="MarvelCharactersFragment"
-        tools:layout="@layout/fragment_marvel_characters">
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_marvelCharactersFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.android.marvel.ui.search.SearchFragment"
+        android:name="com.android.marvel.app.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
@@ -28,25 +28,25 @@
     </fragment>
     <fragment
         android:id="@+id/characterDetailsFragment"
-        android:name="com.android.marvel.ui.details.CharacterDetailsFragment"
+        android:name="com.android.marvel.app.ui.details.DetailsFragment"
         android:label="fragment_character_details"
-        tools:layout="@layout/fragment_character_details" >
+        tools:layout="@layout/fragment_details" >
         <argument
             android:name="character"
-            app:argType="com.android.marvel.ui.model.Character" />
+            app:argType="com.android.marvel.app.model.Character" />
         <action
             android:id="@+id/action_characterDetailsFragment_to_viewerFragment"
             app:destination="@id/viewerFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewerFragment"
-        android:name="com.android.marvel.ui.imageViewer.ImageViewerFragment"
+        android:name="com.android.marvel.app.ui.imageViewer.ImageViewerFragment"
         android:label="ImageViewerFragment" >
         <argument
             android:name="position"
             app:argType="integer" />
         <argument
             android:name="items"
-            app:argType="com.android.marvel.ui.model.DetailItem[]" />
+            app:argType="com.android.marvel.app.model.DetailItem[]" />
     </fragment>
 </navigation>
