@@ -4,9 +4,6 @@
 ---------------------------
 - List of hero characters with pagination.
 
-https://github.com/user-attachments/assets/db953cad-6eeb-4b79-9140-bdba189b1305
-  
-
 - Details screen provides a comprehensive view of characters, with an adjustable section order, lazy-loaded images, and navigation implemented through the Navigation component. It features animations during navigation and images associated with the attached sections.
   
 https://github.com/user-attachments/assets/ab614213-954f-4f36-a3f4-112fdf8aa4c3
@@ -18,7 +15,7 @@ https://github.com/user-attachments/assets/85b29676-974d-48dc-9d6e-161cf0231c9d
 
 - The app is designed to work properly even when there is no internet connection.
   
-https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7
+https://github.com/user-attachments/assets/db953cad-6eeb-4b79-9140-bdba189b1305
 
 ---------------------------
 
