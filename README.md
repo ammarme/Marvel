@@ -5,8 +5,12 @@
 - You can search for characters by their names by tapping the magnifier icon. [Video](https://github.com/user-attachments/assets/28d9c64b-38fe-49dd-9c47-9e22245f7f95).
 - The app is designed to work properly even when there is no internet connection. [Video](https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7).
 - 
-- The app is designed to work properly even when there is no internet connection. https://drive.google.com/file/d/143CKQbk-LDsVsmAzkQdb8J9VlUynKvqa/view
+- The app is designed to work properly even when there is no internet connection. 
 ---------------------------
+
+https://github.com/user-attachments/assets/db953cad-6eeb-4b79-9140-bdba189b1305
+
+
 
 
 Model-View-ViewModel (i.e. MVVM) is a client application architecture template proposed by John Gossman as an alternative to MVC and MVP patterns when using Data Binding technology. Its concept separates data presentation logic from business logic by moving it into a particular class for a clear distinction.
