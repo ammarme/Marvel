@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
             this.layoutManager = layoutManager
         }
 
-        scrollListener =  object : EndlessRecyclerViewScrollListener(layoutManager) {
+        scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 viewModel.getCharacters()
             }
@@ -86,29 +86,33 @@ class HomeFragment : Fragment() {
 
         binding.textViewTryAgain.setOnClickListener {
             scrollListener?.resetFailure()
-            viewModel.getCharacters()
+            viewModel.retry()
         }
     }
 
     private fun observeViewModel() {
-        viewModel.characters.observe(viewLifecycleOwner) { characterList ->
-            characterList?.let { homeAdapter.updateCharacters(it) }
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progress.isVisible = isLoading
-        }
-
-        viewModel.errorConnection.observe(viewLifecycleOwner) { hasError ->
-            updateErrorState(hasError)
-            scrollListener?.resetFailure()
-        }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
-            if (!errorMessage.isNullOrBlank() && homeAdapter.itemCount > 0) {
-                showToast(errorMessage)
-            } else {
-                binding.textViewErrorMessage.text = errorMessage
+        viewModel.homeState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is HomeState.Idle -> {
+                    binding.progress.isVisible = false
+                    binding.layoutInternetError.isVisible = false
+                }
+                is HomeState.Loading -> {
+                    binding.progress.isVisible = true
+                    binding.layoutInternetError.isVisible = false
+                }
+                is HomeState.Success -> {
+                    binding.progress.isVisible = false
+                    binding.layoutInternetError.isVisible = false
+                    homeAdapter.updateCharacters(state.characters)
+                    updateErrorState(false)
+                }
+                is HomeState.Error -> {
+                    binding.progress.isVisible = false
+                    binding.textViewErrorMessage.text = state.message
+                    showToast(state.message)
+                    updateErrorState(true)
+                }
             }
         }
     }

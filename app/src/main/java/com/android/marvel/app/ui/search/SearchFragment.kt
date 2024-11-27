@@ -5,18 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.marvel.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
+    private val searchAdapter = SearchAdapter(mutableListOf())
     private val viewModel: SearchViewModel by viewModels()
 
     override fun onCreateView(
@@ -29,59 +34,58 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupUI()
+        setupRecyclerView()
+        setupSearch()
         observeViewModel()
-    }
-
-    private fun setupUI() {
         binding.cancel.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
 
-        binding.textViewTryAgain.setOnClickListener {
-            viewModel.searchByName(binding.searchView.query.toString())
-        }
-
-        val adapter = SearchAdapter(mutableListOf())
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            this.adapter = adapter
-        }
-
+    private fun setupSearch() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.searchByName(newText)
+                viewModel.updateSearchQuery(newText?.trim().orEmpty())
                 return true
             }
         })
     }
 
     private fun observeViewModel() {
-        viewModel.characters.observe(viewLifecycleOwner) {
-            (binding.recyclerView.adapter as SearchAdapter).setList(it)
-        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchState.collect { state ->
+                when (state) {
+                    is SearchState.Idle -> {
+                        binding.progressBar.isVisible = false
+                    }
 
-        viewModel.errorConnection.observe(viewLifecycleOwner) { hasError ->
-            handleErrorConnection(hasError)
-        }
+                    is SearchState.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
 
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            binding.textViewErrorMessage.text = it
+                    is SearchState.Success -> {
+                        binding.progressBar.isVisible = false
+                        searchAdapter.setList(state.characters)
+                    }
+
+                    is SearchState.Error -> {
+                        binding.progressBar.isVisible = false
+                        Toast.makeText(requireContext(),state.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
-    private fun handleErrorConnection(hasError: Boolean) {
-        if (hasError) {
-            binding.recyclerView.visibility = View.INVISIBLE
-            binding.layoutInternetError.visibility = View.VISIBLE
-        } else {
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.layoutInternetError.visibility = View.INVISIBLE
+    private fun setupRecyclerView() {
+        binding.recyclerView.apply {
+            adapter = searchAdapter
+            layoutManager = LinearLayoutManager(context)
         }
     }
+
 }

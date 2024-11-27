@@ -34,7 +34,7 @@ class SearchAdapter(private var itemList: MutableList<Character>) : RecyclerView
 
             binding.imageView.load(imageUrl) {
                 placeholder(R.color.black)
-                error(R.color.colorPrimaryRed)
+                error(R.color.black)
             }
 
             binding.root.setOnClickListener {

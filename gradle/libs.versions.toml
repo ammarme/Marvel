@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.2"
+androidbrowserhelper = "2.5.0"
 coil = "2.7.0"
 coreTesting = "2.2.0"
 hiltAndroid = "2.51.1"
@@ -20,8 +21,10 @@ mockitoCore = "5.7.0"
 mockitoInline = "5.2.0"
 navigationFragment = "2.8.4"
 retrofit = "2.11.0"
+browser = "1.8.0"
 
 [libraries]
+androidbrowserhelper = { module = "com.google.androidbrowserhelper:androidbrowserhelper", version.ref = "androidbrowserhelper" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
@@ -47,6 +50,7 @@ mockito-android = { module = "org.mockito:mockito-android", version.ref = "mocki
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

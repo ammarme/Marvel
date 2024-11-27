@@ -1,12 +1,12 @@
 package com.android.marvel.app.ui.details
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,10 +15,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.android.marvel.R
 import com.android.marvel.app.model.Character
 import com.android.marvel.app.model.DetailItem
 import com.android.marvel.app.model.getFullImageUrl
 import com.android.marvel.databinding.FragmentDetailsBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -51,18 +53,22 @@ class DetailsFragment : Fragment() {
         val character = args.character
         viewModel.updateCharacter(character)
 
-        viewModel.character.observe(viewLifecycleOwner) {
-            displayCharacterData(it)
-            fetchAdditionalDetails(it)
-        }
-    }
-
-    private fun fetchAdditionalDetails(character: Character) {
-        viewModel.apply {
-            getStoriesByCharacterId(character.id)
-            getEventsByCharacterId(character.id)
-            getComicsByCharacterId(character.id)
-            getSeriesByCharacterId(character.id)
+        viewModel.characterState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is DetailsState.Idle -> {
+                    // Optionally handle idle state, maybe show initial loading
+                }
+                is DetailsState.Loading -> {
+                    // Show loading indicator if needed
+                }
+                is DetailsState.Success -> {
+                    displayCharacterData(state.character)
+                }
+                is DetailsState.Error -> {
+                    // Handle error state
+                    showErrorState(state.message)
+                }
+            }
         }
     }
 
@@ -112,10 +118,20 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    private fun showErrorState(errorMessage: String) {
+        Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_LONG).show()
+    }
+
     private fun displayCharacterData(character: Character) {
         val imageUrl = character.thumbnail?.getFullImageUrl()
-        binding.collapsingImage.load(imageUrl)
-        binding.blurBackground.load(imageUrl)
+        binding.collapsingImage.load(imageUrl) {
+            placeholder(R.color.black)
+            error(R.color.black)
+        }
+        binding.blurBackground.load(imageUrl) {
+            placeholder(R.color.black)
+            error(R.color.black)
+        }
 
         binding.characterName.text = character.name
         binding.characterDescription.text = character.description
@@ -152,8 +168,14 @@ class DetailsFragment : Fragment() {
     private fun setupUrl(view: View, url: String?) {
         view.isVisible = !url.isNullOrBlank()
         view.setOnClickListener {
-            url?.let { safeUrl -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(safeUrl))) }
+            url?.let { safeUrl -> launchCustomTab(safeUrl) }
         }
+    }
+
+    private fun launchCustomTab(url: String) {
+        val builder = CustomTabsIntent.Builder()
+        val customTabsIntent = builder.build()
+        customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
     }
 
     private fun updateRecyclerViewVisibility(

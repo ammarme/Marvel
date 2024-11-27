@@ -1,5 +1,6 @@
 package com.android.marvel.app.ui.imageViewer
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

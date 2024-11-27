@@ -40,20 +40,11 @@
         app:layout_constraintTop_toBottomOf="@id/customToolbar"
         tools:listitem="@layout/item_marvel_character" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/charactersRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ProgressBar
         android:id="@+id/progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="wrap_content"
         android:elevation="4dp"
         android:indeterminate="true"
         android:indeterminateTintMode="src_atop"

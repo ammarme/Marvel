@@ -14,6 +14,9 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val marvelRepository: MarvelRepository
 ) : BaseViewModel() {
+    private val _characterState: MutableLiveData<DetailsState> = MutableLiveData(DetailsState.Idle)
+    val characterState: LiveData<DetailsState> = _characterState
+
     private val comicsLiveData: MutableLiveData<List<DetailItem>> = MutableLiveData()
     val comics: LiveData<List<DetailItem>> = comicsLiveData
 
@@ -26,11 +29,21 @@ class DetailViewModel @Inject constructor(
     private val storiesLiveData: MutableLiveData<List<DetailItem>> = MutableLiveData()
     val stories: LiveData<List<DetailItem>> = storiesLiveData
 
-    private val characterLiveData: MutableLiveData<Character> = MutableLiveData()
-    val character: LiveData<Character> = characterLiveData
-
     fun updateCharacter(character: Character) {
-        this.characterLiveData.value = character
+        _characterState.value = DetailsState.Success(character)
+        fetchAdditionalDetails(character)
+    }
+
+    private fun fetchAdditionalDetails(character: Character) {
+        try {
+            getStoriesByCharacterId(character.id)
+            getEventsByCharacterId(character.id)
+            getComicsByCharacterId(character.id)
+            getSeriesByCharacterId(character.id)
+        } catch (e: Exception) {
+            val message = getError(e).getErrorMessage()
+            _characterState.value = DetailsState.Error(message)
+        }
     }
 
     fun getComicsByCharacterId(id: String) {
@@ -50,6 +63,8 @@ class DetailViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 comicsLiveData.postValue(emptyList())
+                val message = getError(e).getErrorMessage()
+                _characterState.value = DetailsState.Error(message)
             }
         }
     }
@@ -71,6 +86,8 @@ class DetailViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 seriesLiveData.postValue(emptyList())
+                val message = getError(e).getErrorMessage()
+                _characterState.value = DetailsState.Error(message)
             }
         }
     }
@@ -92,7 +109,8 @@ class DetailViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 eventsLiveData.postValue(emptyList())
-            }
+                val message = getError(e).getErrorMessage()
+                _characterState.value = DetailsState.Error(message)            }
         }
     }
 
@@ -113,7 +131,8 @@ class DetailViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 storiesLiveData.postValue(emptyList())
-            }
+                val message = getError(e).getErrorMessage()
+                _characterState.value = DetailsState.Error(message)            }
         }
     }
 }

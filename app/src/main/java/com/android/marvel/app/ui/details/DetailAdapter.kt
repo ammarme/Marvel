@@ -7,21 +7,22 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.android.marvel.databinding.ItemDetailsBinding
+import com.android.marvel.R
 import com.android.marvel.app.model.DetailItem
 import com.android.marvel.app.model.getFullImageUrl
+import com.android.marvel.databinding.ItemDetailsBinding
 
 class DetailsAdapter(
     private var items: MutableList<DetailItem>
 ) : RecyclerView.Adapter<DetailsAdapter.ItemViewHolder>() {
 
-    inner class ItemViewHolder(
-        private val binding: ItemDetailsBinding,
-        private val items: List<DetailItem>
-    ) : RecyclerView.ViewHolder(binding.root) {
+    inner class ItemViewHolder(private val binding: ItemDetailsBinding ,private val items: List<DetailItem>) : RecyclerView.ViewHolder(binding.root) {
         fun bind(detailItem: DetailItem) {
             binding.textViewName.text = detailItem.title
-            binding.imageViewHero.load(detailItem.thumbnail?.getFullImageUrl())
+            binding.imageViewHero.load(detailItem.thumbnail?.getFullImageUrl()) {
+                placeholder(R.color.black)
+                error(R.color.black)
+            }
 
             binding.root.setOnClickListener {
                 val action = DetailsFragmentDirections
@@ -40,7 +41,7 @@ class DetailsAdapter(
             parent,
             false
         )
-        return ItemViewHolder(binding, items)
+        return ItemViewHolder(binding , items)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {

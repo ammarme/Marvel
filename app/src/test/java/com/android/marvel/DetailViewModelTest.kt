@@ -8,6 +8,7 @@ import com.android.marvel.app.model.DetailsResponse
 import com.android.marvel.app.model.Thumbnail
 import com.android.marvel.app.repo.MarvelRepository
 import com.android.marvel.app.ui.details.DetailViewModel
+import com.android.marvel.app.ui.details.DetailsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -60,7 +61,6 @@ class DetailViewModelTest {
 
         viewModel.getComicsByCharacterId(characterId)
 
-
         val comics = viewModel.comics.value
         assertNotNull(comics)
         assertEquals(1, comics?.size)
@@ -68,7 +68,7 @@ class DetailViewModelTest {
     }
 
     @Test(expected = Exception::class)
-    fun `test getComicsByCharacterId should post empty list on error`() = runTest {
+    fun `test getComicsByCharacterId should handle error`() = runTest {
         val characterId = "123"
 
         `when`(marvelRepository.getComicsByCharacterId(characterId)).thenThrow(Exception("Network Error"))
@@ -80,13 +80,49 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `test updateCharacter should update character LiveData`() {
+    fun `test updateCharacter should update character state`() = runTest{
         val character = Character(id = "1", name = "Iron Man", description = "Test Description")
+
+        val seriesResponse = DetailsResponse(
+            data = DetailsData(
+                results = listOf(
+                    DetailItem(id = "1", title = "Series 1", thumbnail = Thumbnail("http://image.com"))
+                )
+            )
+        )
+        val eventsResponse = DetailsResponse(
+            data = DetailsData(
+                results = listOf(
+                    DetailItem(id = "1", title = "Event 1", thumbnail = Thumbnail("http://image.com"))
+                )
+            )
+        )
+        val storiesResponse = DetailsResponse(
+            data = DetailsData(
+                results = listOf(
+                    DetailItem(id = "1", title = "Story 1", thumbnail = Thumbnail("http://image.com"))
+                )
+            )
+        )
+        val comicsResponse = DetailsResponse(
+            data = DetailsData(
+                results = listOf(
+                    DetailItem(id = "1", title = "Comic 1", thumbnail = Thumbnail("http://image.com"))
+                )
+            )
+        )
+        `when`(marvelRepository.getStoriesByCharacterId(character.id)).thenReturn(storiesResponse)
+        `when`(marvelRepository.getComicsByCharacterId(character.id)).thenReturn(comicsResponse)
+        `when`(marvelRepository.getEventByCharacterId(character.id)).thenReturn(eventsResponse)
+        `when`(marvelRepository.getSeriesByCharacterId(character.id)).thenReturn(seriesResponse)
 
         viewModel.updateCharacter(character)
 
-        val updatedCharacter = viewModel.character.value
-        assertEquals("Iron Man", updatedCharacter?.name)
+        val characterState = viewModel.characterState.value
+        assertTrue(characterState is DetailsState.Success)
+
+        val successState = characterState as DetailsState.Success
+        assertEquals("Iron Man", successState.character.name)
     }
 
     @Test
@@ -112,7 +148,7 @@ class DetailViewModelTest {
     }
 
     @Test(expected = Exception::class)
-    fun `test getSeriesByCharacterId should post empty list on error`() = runTest {
+    fun `test getSeriesByCharacterId should handle error`() = runTest {
         val characterId = "123"
 
         `when`(marvelRepository.getSeriesByCharacterId(characterId)).thenThrow(Exception("Network Error"))
@@ -146,7 +182,7 @@ class DetailViewModelTest {
     }
 
     @Test(expected = Exception::class)
-    fun `test getEventsByCharacterId should post empty list on error`() = runTest {
+    fun `test getEventsByCharacterId should handle error`() = runTest {
         val characterId = "123"
 
         `when`(marvelRepository.getEventByCharacterId(characterId)).thenThrow(Exception("Network Error"))
@@ -180,7 +216,7 @@ class DetailViewModelTest {
     }
 
     @Test(expected = Exception::class)
-    fun `test getStoriesByCharacterId should post empty list on error`() = runTest {
+    fun `test getStoriesByCharacterId should handle error`() = runTest {
         val characterId = "123"
 
         `when`(marvelRepository.getStoriesByCharacterId(characterId)).thenThrow(Exception("Network Error"))
@@ -190,6 +226,7 @@ class DetailViewModelTest {
         val stories = viewModel.stories.value
         assertTrue(stories.isNullOrEmpty())
     }
+
     @After
     fun tearDown() {
         Dispatchers.resetMain()

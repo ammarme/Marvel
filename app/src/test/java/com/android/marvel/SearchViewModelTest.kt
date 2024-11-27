@@ -5,127 +5,129 @@ import com.android.marvel.app.model.Character
 import com.android.marvel.app.model.CharacterData
 import com.android.marvel.app.model.CharactersResponse
 import com.android.marvel.app.repo.MarvelRepository
+import com.android.marvel.app.ui.search.SearchState
 import com.android.marvel.app.ui.search.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-import kotlin.coroutines.cancellation.CancellationException
+import org.mockito.exceptions.base.MockitoException
+import java.io.IOException
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
-    @Mock
-    lateinit var marvelRepository: MarvelRepository
-
-    private lateinit var searchViewModel: SearchViewModel
-
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private lateinit var viewModel: SearchViewModel
+    private lateinit var marvelRepository: MarvelRepository
 
+    private val testDispatcher = StandardTestDispatcher()
 
     @Before
-    fun setUp() {
+    fun setup() {
         Dispatchers.setMain(testDispatcher)
-        MockitoAnnotations.openMocks(this)
-        searchViewModel = SearchViewModel(marvelRepository)
+        marvelRepository = mock(MarvelRepository::class.java)
+        viewModel = SearchViewModel(marvelRepository)
     }
 
     @Test
-    fun `searchByName with valid name should update charactersLiveData`() = runTest {
-        val nameStartsWith = "Spider"
-        val charactersResponse = listOf(
-            Character(id = "1", name = "Spider-Man", description = "A hero"),
-            Character(id = "2", name = "Spider-Woman", description = "A heroine")
+    fun `initial state is Idle`() = runTest {
+        assertEquals(SearchState.Idle, viewModel.searchState.value)
+    }
+
+    @Test
+    fun `search query updates to Loading and Success state`() = runTest {
+        val searchQuery = "Spider-Man"
+        val mockCharacters = listOf(
+            mock(Character::class.java),
+            mock(Character::class.java)
         )
-        val apiResponse = CharactersResponse(
-            data = CharacterData(results = charactersResponse)
-        )
+        val mockCharactersResponse = mock(CharactersResponse::class.java)
+        val mockCharacterData = mock(CharacterData::class.java)
 
-        `when`(marvelRepository.searchByName(nameStartsWith)).thenReturn(apiResponse)
+        `when`(marvelRepository.searchByName(searchQuery)).thenReturn(mockCharactersResponse)
+        `when`(mockCharactersResponse.data).thenReturn(mockCharacterData)
+        `when`(mockCharacterData.results).thenReturn(mockCharacters)
 
-        searchViewModel.searchByName(nameStartsWith)
+        viewModel.updateSearchQuery(searchQuery)
 
-        val characters = searchViewModel.characters.value
-        assertNotNull(characters)
-        assertEquals(2, characters?.size)
-        assertEquals("Spider-Man", characters?.get(0)?.name)
-        assertEquals("Spider-Woman", characters?.get(1)?.name)
+
+        advanceTimeBy(310)
+
+        val successState = viewModel.searchState.value as SearchState.Success
+        assertEquals(mockCharacters, successState.characters)
+
+        verify(marvelRepository).searchByName(searchQuery)
     }
 
     @Test
-    fun `searchByName with empty name should clear charactersLiveData`() = runTest {
-        val nameStartsWith = ""
+    fun `search query with empty string return Bad response!`() = runTest {
+        val emptyQuery = ""
 
-        searchViewModel.searchByName(nameStartsWith)
+        viewModel.updateSearchQuery(emptyQuery)
 
-        val characters = searchViewModel.characters.value
-        assertNotNull(characters)
-        assertTrue(characters.isNullOrEmpty())
+        advanceTimeBy(310)
+
+        assertEquals(SearchState.Idle, viewModel.searchState.value)
+
+        verify(marvelRepository, never()).searchByName(emptyQuery)
+    }
+
+    @Test(expected = MockitoException::class)
+    fun `search query handles network error`() = runTest {
+        val searchQuery = "UnknownCharacter"
+        val networkError = IOException("Network connection failed")
+
+        `when`(marvelRepository.searchByName(searchQuery)).thenThrow(networkError)
+
+        viewModel.updateSearchQuery(searchQuery)
+
+        advanceTimeBy(310)
+
+        assertTrue(viewModel.searchState.value is SearchState.Error)
+        val errorState = viewModel.searchState.value as SearchState.Error
+        assertEquals("Network connection failed", errorState.message)
+
+        verify(marvelRepository).searchByName(searchQuery)
     }
 
     @Test
-    fun `searchByName with null name should clear charactersLiveData`() = runTest {
-        val nameStartsWith: String? = null
+    fun `multiple quick searches trigger only last search`() = runTest {
+        val query1 = "Iron Man"
+        val query2 = "Thor"
+        val mockCharactersResponse = mock(CharactersResponse::class.java)
+        val mockCharacterData = mock(CharacterData::class.java)
+        val mockCharacters = listOf(mock(Character::class.java))
 
-        searchViewModel.searchByName(nameStartsWith)
+        `when`(marvelRepository.searchByName(query2)).thenReturn(mockCharactersResponse)
+        `when`(mockCharactersResponse.data).thenReturn(mockCharacterData)
+        `when`(mockCharacterData.results).thenReturn(mockCharacters)
 
-        val characters = searchViewModel.characters.value
-        assertNotNull(characters)
-        assertTrue(characters.isNullOrEmpty())
-    }
+        viewModel.updateSearchQuery(query1)
+        viewModel.updateSearchQuery(query2)
 
-    @Test
-    fun `searchByName with Bad response should update errorConnectionLiveData and errorMessageLiveData`() =
-        runTest {
-            val nameStartsWith = "Spider"
-            val errorMessage = "Bad response!"
+        advanceTimeBy(310)
 
-            `when`(marvelRepository.searchByName(nameStartsWith)).thenThrow(
-                RuntimeException(
-                    errorMessage
-                )
-            )
+        verify(marvelRepository, times(1)).searchByName(query2)
 
-            searchViewModel.searchByName(nameStartsWith)
-
-            val errorConnection = searchViewModel.errorConnection.value
-            val errorMessageLiveData = searchViewModel.errorMessage.value
-
-            assertTrue(errorConnection == true)
-            assertEquals(errorMessage, errorMessageLiveData)
-        }
-
-    @Test
-    fun `searchByName cancellation should not update any LiveData`() = runTest {
-        val nameStartsWith = "Spider"
-
-        `when`(marvelRepository.searchByName(nameStartsWith)).thenThrow(CancellationException())
-
-        searchViewModel.searchByName(nameStartsWith)
-
-        val characters = searchViewModel.characters.value
-        val errorConnection = searchViewModel.errorConnection.value
-        val errorMessageLiveData = searchViewModel.errorMessage.value
-
-        assertNull(characters)
-        assertNull(errorConnection)
-        assertNull(errorMessageLiveData)
+        val successState = viewModel.searchState.value as SearchState.Success
+        assertEquals(mockCharacters, successState.characters)
     }
 
     @After

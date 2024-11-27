@@ -1,13 +1,14 @@
 package com.android.marvel.app.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.android.marvel.app.model.Character
 import com.android.marvel.app.repo.MarvelRepository
 import com.android.marvel.app.utils.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,37 +17,40 @@ class SearchViewModel @Inject constructor(
     private val marvelRepository: MarvelRepository
 ) : BaseViewModel() {
 
-    private val charactersLiveData: MutableLiveData<List<Character>> = MutableLiveData()
-    val characters: LiveData<List<Character>> get() = charactersLiveData
+    private val _searchState = MutableStateFlow<SearchState>(SearchState.Idle)
+    val searchState: StateFlow<SearchState> = _searchState.asStateFlow()
+    private val _searchQuery = MutableStateFlow("")
 
-    private val errorConnectionLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val errorConnection: LiveData<Boolean> get() = errorConnectionLiveData
+    init {
+        setupSearchDebounce()
+    }
 
-    private val errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
-    val errorMessage: LiveData<String> get() = errorMessageLiveData
-
-    private var searchJob: Job? = null
-
-    fun searchByName(nameStartsWith: String?) {
-        searchJob?.cancel()
-
-        if (nameStartsWith.isNullOrBlank()) {
-            charactersLiveData.value = emptyList()
-            return
+    @OptIn(FlowPreview::class)
+    private fun setupSearchDebounce() {
+        scope.launch {
+            _searchQuery
+                .debounce(300)
+                .distinctUntilChanged()
+                .collect { query ->
+                    if(query.isNotBlank()) {
+                        _searchState.value = SearchState.Loading
+                        searchCharacters(query)
+                    }
+                }
         }
+    }
 
-        searchJob = scope.launch {
-            try {
-                val response = marvelRepository.searchByName(nameStartsWith)
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
 
-                charactersLiveData.value = response.data.results
-                errorConnectionLiveData.value = false
-            } catch (_: CancellationException) {
-
-            } catch (e: Exception) {
-                errorMessageLiveData.value = getError(e).getErrorMessage()
-                errorConnectionLiveData.value = true
-            }
+    private suspend fun searchCharacters(query: String) {
+        try {
+            val results = marvelRepository.searchByName(query)
+            _searchState.value = SearchState.Success(results.data.results)
+        } catch (e: Exception) {
+            val message = getError(e).getErrorMessage()
+            _searchState.value = SearchState.Error(message)
         }
     }
 }

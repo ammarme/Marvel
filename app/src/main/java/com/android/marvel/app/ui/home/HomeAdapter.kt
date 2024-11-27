@@ -24,7 +24,7 @@ class HomeAdapter(
 
             binding.itemImageView.load(imageUrl) {
                 placeholder(R.color.black)
-                error(R.color.colorPrimaryRed)
+                error(R.color.black)
             }
 
             binding.root.setOnClickListener {

@@ -17,38 +17,36 @@ class HomeViewModel @Inject constructor(
     private var limit: Int = 20
     private var offset: Int = 1
 
-    private val charactersLiveData = MutableLiveData<List<Character>>()
-    val characters: LiveData<List<Character>> = charactersLiveData // Expose immutable LiveData
+    private val _homeState = MutableLiveData<HomeState>(HomeState.Idle)
+    val homeState: LiveData<HomeState> = _homeState
 
-    private val isLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val isLoading: LiveData<Boolean> get() = isLoadingLiveData
-
-    private val errorConnectionLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val errorConnection: LiveData<Boolean> get() = errorConnectionLiveData
-
-    private val errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
-    val errorMessage: LiveData<String> get() = errorMessageLiveData
+    private val charactersList = mutableListOf<Character>()
 
     init {
         getCharacters()
     }
 
     fun getCharacters() {
-        isLoadingLiveData.value = true
+        if (_homeState.value is HomeState.Loading) return
+
+        _homeState.value = HomeState.Loading
+
         scope.launch {
             try {
                 val response = marvelRepository.getCharacters(limit, offset)
 
-                val currentList = charactersLiveData.value.orEmpty()
-                charactersLiveData.value = currentList + response.data.results
+                charactersList.addAll(response.data.results)
+
+                _homeState.value = HomeState.Success(charactersList.toList())
 
                 offset += limit
-                errorConnectionLiveData.value = false
             } catch (e: Exception) {
-                errorMessageLiveData.value = getError(e).getErrorMessage()
-                errorConnectionLiveData.value = true
+                _homeState.value = HomeState.Error(getError(e).getErrorMessage())
             }
-            isLoadingLiveData.value = false
         }
+    }
+
+    fun retry() {
+        getCharacters()
     }
 }

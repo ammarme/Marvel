@@ -14,7 +14,10 @@ class ImageViewerPagerAdapter(private val items: List<DetailItem>) :
 
     class ImageViewerPagerViewHolder(private val binding: ItemComicPageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(item : DetailItem){
-            binding.comicPageImage.load(item.thumbnail?.getFullImageUrl())
+            binding.comicPageImage.load(item.thumbnail?.getFullImageUrl()) {
+                placeholder(R.color.black)
+                error(R.color.black)
+            }
         }
     }
 
