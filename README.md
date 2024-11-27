@@ -5,7 +5,7 @@
 - You can search for characters by their names by tapping the magnifier icon. [Video](https://github.com/user-attachments/assets/28d9c64b-38fe-49dd-9c47-9e22245f7f95).
 - The app is designed to work properly even when there is no internet connection. [Video](https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7).
 - 
-- The app is designed to work properly even when there is no internet connection. https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7.
+- The app is designed to work properly even when there is no internet connection. https://drive.google.com/file/d/143CKQbk-LDsVsmAzkQdb8J9VlUynKvqa/view
 ---------------------------
 
 
