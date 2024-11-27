@@ -8,7 +8,17 @@
 - The app is designed to work properly even when there is no internet connection. 
 ---------------------------
 
+https://github.com/user-attachments/assets/85b29676-974d-48dc-9d6e-161cf0231c9d
+
+https://github.com/user-attachments/assets/ab614213-954f-4f36-a3f4-112fdf8aa4c3
+
+https://github.com/user-attachments/assets/28d9c64b-38fe-49dd-9c47-9e22245f7f95
+
 https://github.com/user-attachments/assets/db953cad-6eeb-4b79-9140-bdba189b1305
+
+https://github.com/user-attachments/assets/8f21da2a-7ffa-4191-be70-1fdeb886d3b7
+
+
 
 
 
